@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-contract SimpleStorage {
+import "./Fundme.sol";
+
+contract SimpleStorage is Fundme {
     uint256 public favoriteNumber;
 
     struct Person {

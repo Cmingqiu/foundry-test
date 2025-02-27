@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.26;
 
 contract Fundme {
     address public ownerAddress; // owner的账户地址
@@ -22,15 +22,18 @@ contract Fundme {
     }
 
     // 给合约发送token
-    function fund() public payable amountRequire(msg.value) {
-        addrToAmount[msg.sender] = msg.value;
+    function fund(
+        uint256 _value
+    ) public payable amountRequire(_value > 0 ? _value : msg.value) {
+        uint256 _amount = _value > 0 ? _value : msg.value;
+        addrToAmount[msg.sender] = _amount;
         addrs.push(msg.sender);
-        emit Transfer(msg.sender, msg.value);
+        emit Transfer(msg.sender, _amount);
     }
 
     // owner提现
-    function withdraw() public onlyOwner {
-        uint256 balance = getBalance();
+    function withdraw(uint256 _value) public onlyOwner {
+        uint256 balance = _value > 0 ? _value : getBalance();
         require(balance > 0, "balance is not greater than 0");
         // payable(msg.sender).transfer(balance); // transfer 上限2300gas，超出这个上限会报错并且自动回滚交易revert
 
