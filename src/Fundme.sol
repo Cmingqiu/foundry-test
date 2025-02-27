@@ -9,7 +9,7 @@ contract Fundme {
         ownerAddress = msg.sender; // address(this);   // assign contract address
     }
 
-    event Transfer(address indexed _addr, uint256 _value);
+    event Transfer(address _addr, uint256 _value);
 
     modifier amountRequire(uint _value) {
         require(_value > 0.1 * 1e18, "amount is not greater than 0.1eth");
