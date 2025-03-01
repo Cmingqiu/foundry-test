@@ -9,7 +9,7 @@ contract Fundme {
         ownerAddress = msg.sender; // address(this);   // assign contract address
     }
 
-    event Transfer(address _addr, uint256 _value);
+    event Transfer(address indexed _addr, uint256 _value);
 
     modifier amountRequire(uint _value) {
         require(_value > 0.1 * 1e18, "amount is not greater than 0.1eth");
@@ -22,10 +22,8 @@ contract Fundme {
     }
 
     // 给合约发送以太币
-    function fund(
-        uint256 _value
-    ) public payable amountRequire(_value > 0 ? _value : msg.value) {
-        uint256 _amount = _value > 0 ? _value : msg.value;
+    function fund() external payable amountRequire(msg.value) {
+        uint256 _amount = msg.value;
         addrToAmount[msg.sender] = _amount;
         addrs.push(msg.sender);
         emit Transfer(msg.sender, _amount);
@@ -59,8 +57,8 @@ contract Fundme {
         return addrToAmount[addr];
     }
 
-    // 接收ETH
+    // 用于接收纯 ETH 转账
     receive() external payable {
-        // fund(msg.value);
+        emit Transfer(msg.sender, msg.value);
     }
 }
