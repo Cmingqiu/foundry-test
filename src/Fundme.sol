@@ -3,7 +3,7 @@ pragma solidity ^0.8.26;
 
 contract Fundme {
     address public ownerAddress; // owner的账户地址
-    mapping(address => uint256) private addrToAmount; // 账户地址映射金额
+    mapping(address => uint256) public addrToAmount; // 账户地址映射金额
     address[] public addrs; // 发送来的账户地址
     constructor() {
         ownerAddress = msg.sender; // address(this);   // assign contract address
@@ -21,7 +21,7 @@ contract Fundme {
         _;
     }
 
-    // 给合约发送token
+    // 给合约发送以太币
     function fund(
         uint256 _value
     ) public payable amountRequire(_value > 0 ? _value : msg.value) {
@@ -53,5 +53,14 @@ contract Fundme {
     // 查看合约余额
     function getBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    function getAddrToAmount(address addr) public view returns (uint256) {
+        return addrToAmount[addr];
+    }
+
+    // 接收ETH
+    receive() external payable {
+        // fund(msg.value);
     }
 }
